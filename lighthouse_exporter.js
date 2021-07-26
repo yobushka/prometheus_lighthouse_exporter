@@ -65,6 +65,7 @@ http.createServer(async (req, res) => {
                     data.push(`lighthouse_timings{audit="server-response-time"} ${Math.round(audits["server-response-time"].numericValue)}`);
                     data.push(`lighthouse_timings{audit="bootup-time"} ${Math.round(audits["bootup-time"].numericValue)}`);
                     data.push(`lighthouse_timings{audit="largest-contentful-paint"} ${Math.round(audits["largest-contentful-paint"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="cumulative-layout-shift"} ${Math.round(audits["cumulative-layout-shift"].numericValue)}`);
                 })
                 .catch(error => {
                     console.error("Lighthouse", Date(), error);
