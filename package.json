@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "async-mutex": "^0.2.6",
-    "lighthouse": "^7.0.0",
+    "lighthouse": "^8.0.0",
     "minimist": "^1.2.5",
     "puppeteer": "^5.5.0"
   }
