@@ -9,7 +9,6 @@ import lighthouse from 'lighthouse';
 import minimist from 'minimist';
 import {Mutex, Semaphore, withTimeout} from 'async-mutex';
 
-
 var argv = minimist(process.argv.slice(2));
 
 var port = 9593;
@@ -55,7 +54,7 @@ http.createServer(async (req, res) => {
 
             data.push('# HELP lighthouse_exporter_info Exporter Info');
             data.push('# TYPE lighthouse_exporter_info gauge');
-            data.push(`lighthouse_exporter_info{version="0.2.8",chrome_version="${await browser.version()}",mode="${mode}",tag="${tag}",node_version="${process.version}"} `);
+            data.push(`lighthouse_exporter_info{version="0.2.8",chrome_version="${await browser.version()}",mode="${mode}",tag="${tag}",node_version="${process.version}"} 1`);
 
             await lighthouse(target, {
                 port: url.parse(browser.wsEndpoint()).port,
