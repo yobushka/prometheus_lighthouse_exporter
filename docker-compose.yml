@@ -1,6 +1,7 @@
 name: new
 services:
   lighthouse-exporter:
+    image: lighthouse-exporter-yobushka
     build:
       context: .
       dockerfile: Dockerfile
