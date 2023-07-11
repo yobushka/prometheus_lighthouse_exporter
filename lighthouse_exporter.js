@@ -28,7 +28,7 @@ http.createServer(async (req, res) => {
     if(q.pathname == '/probe'){
         var target = q.query.target;
 	var mode = 'mobile';
-	var tag = 'not set';
+	var tag = 'no';
 
         if (q.query.mode) {
 	    if (q.query.mode == 'mobile') {
