@@ -27,21 +27,39 @@ http.createServer(async (req, res) => {
 
     if(q.pathname == '/probe'){
         var target = q.query.target;
+	var mode = 'mobile';
+	var tag = 'not set';
+
+        if (q.query.mode) {
+	    if (q.query.mode == 'mobile') {
+            mode = 'mobile'
+            }
+	    if (q.query.mode == 'desktop') {
+            mode = 'desktop'
+            }
+        }
+
+        if (q.query.tag) {
+            tag = q.query.tag
+        }
+
+
         var data = [];
 
         try{
 	    const browser = await puppeteer.launch({
               headless: 'new',
               args: ['--no-sandbox', '--disable-setuid-sandbox'],
-              dumpio: true
+              dumpio: false
             });
 
             data.push('# HELP lighthouse_exporter_info Exporter Info');
             data.push('# TYPE lighthouse_exporter_info gauge');
-            data.push(`lighthouse_exporter_info{version="0.2.8",chrome_version="${await browser.version()}",node_version="${process.version}"} 1`);
+            data.push(`lighthouse_exporter_info{version="0.2.8",chrome_version="${await browser.version()}",mode="${mode}",tag="${tag}",node_version="${process.version}"} `);
 
             await lighthouse(target, {
                 port: url.parse(browser.wsEndpoint()).port,
+                preset: 'mobile',
                 output: 'json'
             })
                 .then(results => {
