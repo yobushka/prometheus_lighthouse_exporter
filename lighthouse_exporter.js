@@ -2,12 +2,13 @@
 
 'use strict';
 
-const http = require('http');
-const url = require('url');
-const puppeteer = require('puppeteer');
-const lighthouse = require('lighthouse');
-const minimist = require('minimist');
-const Mutex = require('async-mutex').Mutex;
+import http from 'http';
+import url from 'url';
+import puppeteer from 'puppeteer';
+import lighthouse from 'lighthouse';
+import minimist from 'minimist';
+import {Mutex, Semaphore, withTimeout} from 'async-mutex';
+
 
 var argv = minimist(process.argv.slice(2));
 
@@ -29,7 +30,11 @@ http.createServer(async (req, res) => {
         var data = [];
 
         try{
-            const browser = await puppeteer.launch({args: ['--no-sandbox', '--disable-setuid-sandbox']});
+	    const browser = await puppeteer.launch({
+              headless: 'new',
+              args: ['--no-sandbox', '--disable-setuid-sandbox],
+              dumpio: true
+            });
 
             data.push('# HELP lighthouse_exporter_info Exporter Info');
             data.push('# TYPE lighthouse_exporter_info gauge');

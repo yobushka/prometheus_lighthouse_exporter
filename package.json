@@ -2,6 +2,7 @@
   "name": "prometheus_lighthouse_exporter",
   "version": "0.2.8",
   "description": "",
+  "type": "module",
   "main": "lighthouse_exporter.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -22,9 +23,9 @@
     "url": "https://github.com/pkesc/prometheus_lighthouse_exporter"
   },
   "dependencies": {
-    "async-mutex": "^0.2.6",
-    "lighthouse": "^8.0.0",
-    "minimist": "^1.2.5",
-    "puppeteer": "^9.1.0"
+    "async-mutex": "",
+    "lighthouse": "",
+    "minimist": "",
+    "puppeteer": ""
   }
 }
