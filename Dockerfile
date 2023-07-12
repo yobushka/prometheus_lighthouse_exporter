@@ -13,10 +13,11 @@ RUN apt-get update \
       --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-COPY lighthouse_exporter.js .
 COPY package.json .
 
 RUN npm install
+
+COPY lighthouse_exporter.js .
 
 EXPOSE 9593
 

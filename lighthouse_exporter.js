@@ -29,6 +29,9 @@ http.createServer(async (req, res) => {
 	var mode = 'mobile';
 	var tag = 'no';
 
+        const parser = url.parse(target);
+	var uri = parser.pathname
+
         if (q.query.mode) {
 	    if (q.query.mode == 'mobile') {
             mode = 'mobile'
@@ -54,11 +57,11 @@ http.createServer(async (req, res) => {
 
             data.push('# HELP lighthouse_exporter_info Exporter Info');
             data.push('# TYPE lighthouse_exporter_info gauge');
-            data.push(`lighthouse_exporter_info{version="0.2.8",chrome_version="${await browser.version()}",mode="${mode}",tag="${tag}",node_version="${process.version}"} 1`);
+            data.push(`lighthouse_exporter_info{version="0.2.9",chrome_version="${await browser.version()}",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}",node_version="${process.version}"} 1`);
 
             await lighthouse(target, {
                 port: url.parse(browser.wsEndpoint()).port,
-                preset: 'mobile',
+                preset: '${mode}',
                 output: 'json'
             })
                 .then(results => {
@@ -68,7 +71,7 @@ http.createServer(async (req, res) => {
                     for(var category in results.lhr.categories){
                         var item = results.lhr.categories[category];
 
-                        data.push(`lighthouse_score{category="${category}"} ${item.score * 100}`);
+                        data.push(`lighthouse_score{category="${category}",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${item.score * 100}`);
                     }
 
                     var audits = results.lhr.audits;
@@ -76,16 +79,16 @@ http.createServer(async (req, res) => {
                     data.push('# HELP lighthouse_timings Audit timings in ms');
                     data.push('# TYPE lighthouse_timings gauge');
 
-                    data.push(`lighthouse_timings{audit="first-contentful-paint"} ${Math.round(audits["first-contentful-paint"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="first-meaningful-paint"} ${Math.round(audits["first-meaningful-paint"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="speed-index"} ${Math.round(audits["speed-index"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="interactive"} ${Math.round(audits["interactive"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="total-blocking-time"} ${Math.round(audits["total-blocking-time"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="max-potential-fid"} ${Math.round(audits["max-potential-fid"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="server-response-time"} ${Math.round(audits["server-response-time"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="bootup-time"} ${Math.round(audits["bootup-time"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="largest-contentful-paint"} ${Math.round(audits["largest-contentful-paint"].numericValue)}`);
-                    data.push(`lighthouse_timings{audit="cumulative-layout-shift"} ${Math.round(audits["cumulative-layout-shift"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="first-contentful-paint",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["first-contentful-paint"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="first-meaningful-paint",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["first-meaningful-paint"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="speed-index",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["speed-index"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="interactive",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["interactive"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="total-blocking-time",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["total-blocking-time"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="max-potential-fid",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["max-potential-fid"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="server-response-time",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["server-response-time"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="bootup-time",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["bootup-time"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="largest-contentful-paint",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["largest-contentful-paint"].numericValue)}`);
+                    data.push(`lighthouse_timings{audit="cumulative-layout-shift",mode="${mode}",tag="${tag}",host="${parser.hostname}",uri="${uri}"} ${Math.round(audits["cumulative-layout-shift"].numericValue)}`);
                 })
                 .catch(error => {
                     console.error("Lighthouse", Date(), error);
